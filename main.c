@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -9,67 +10,50 @@ int get_random_int(int min, int max) {
   return min + (int)(rand() / (1.0 + RAND_MAX) * (max - min + 1.0));
 }
 
-void add(int8_t *a, int8_t *b, int16_t *ans) {
-  for (int i = 0; i < 100; ++i) {
+void add(int16_t *a, int16_t *b, int16_t *ans) {
+  for (int i = 0; i < 128; ++i) {
     ans[i] = a[i] + b[i];
   }
 }
 
-void sub(int16_t *a, int8_t *b, int16_t *ans) {
-  for (int i = 0; i < 200; ++i) {
-    if (i > 99) {
-      ans[i] = a[i];
-    } else {
-      ans[i] = a[i] - b[i];
-    }
+void sub(int16_t *a, int16_t *b, int16_t *ans) {
+  for (int i = 0; i < 128; ++i) {
+    ans[i] = a[i] - b[i];
   }
 }
 
-void mul(int8_t *a, int8_t *b, int16_t *ans) {
-  for (int i = 0; i < 100; ++i) {
-    for (int j = 0; j < 100; ++j) {
+void mul(int16_t *a, int16_t *b, int16_t *ans) {
+  for (int i = 0; i < 128; ++i) {
+    for (int j = 0; j < 128; ++j) {
       ans[i + j] += a[i] * b[j];
     }
   }
 }
 
-void div(int8_t *a, int len_a, int8_t *b, int len_b, int16_t *ans) {
-  if (compare_bigint(a, len_a, b, len_b) < 0) {
-    memset(ans, 0, 200 * sizeof(int16_t));
-    return;
+void mul384(int16_t *a, int16_t *b, int16_t *ans) {
+  for (int i = 0; i < 256; ++i) {
+    for (int j = 0; j < 128; ++j) {
+      ans[i + j] += a[i] * b[j];
+    }
   }
-  int d = len_a - len_b;
-  int8_t c[100] = a + d;
-  if (compare_bigint(c, len_b, b, len_b) >= 0) {
-    ++d;
-  }
-  if (d == 0) {
-    memset(ans, 0, 200 * sizeof(int16_t));
-    return;
-  }
-  for (int i = d - 1; i >= 0; --i) {
-    ans[i] = 9;
-    for (int j = 1; j <= 9; ++j) {
-      int16_t temp[200];
-      int8_t mul_b[100] = {0};
-      mul_b[0] = j;
-      mul(b, mul_b, temp);
-      if (compare_bigint(temp, count_digit(temp), c, len_b) == 1){
-        ans[i] = j - 1;
-        break;
-      } 
+}
+
+void mul512(int16_t *a, int16_t *b, int16_t *ans) {
+  for (int i = 0; i < 384; ++i) {
+    for (int j = 0; j < 128; ++j) {
+      ans[i + j] += a[i] * b[j];
     }
   }
 }
 
 void carry_up_down_fix(int16_t *a) {
-  for (int i = 0; i < 200; ++i) {
+  for (int i = 0; i < 256; ++i) {
     if (a[i] >= 10) {
       a[i + 1] += a[i] / 10;
       a[i] -= 10 * (a[i] / 10);
     }
   }
-  for (int i = 0; i < 200; ++i) {
+  for (int i = 0; i < 256; ++i) {
     if (a[i] < 0) {
       a[i + 1] -= (-a[i] - 1) / 10 + 1;
       a[i] += 10 * ((-a[i] - 1) / 10 + 1);
@@ -77,53 +61,186 @@ void carry_up_down_fix(int16_t *a) {
   }
 }
 
-int compare_bigint(int8_t *a, int len_a, int8_t *b, int len_b) {
-  if (len_a > len_b) return +1;
-  if (len_a < len_b) return -1;
-  for (int i = len_a - 1; i >= 0; --i) {
-    if (a[i] > b[i]) return +1;
-    if (a[i] < b[i]) return -1;
+void carry_up_down_fix128(int16_t *a) {
+  for (int i = 0; i < 128; ++i) {
+    if (a[i] >= 10) {
+      a[i + 1] += a[i] / 10;
+      a[i] -= 10 * (a[i] / 10);
+    }
   }
-  return 0;
+  for (int i = 0; i < 128; ++i) {
+    if (a[i] < 0) {
+      a[i + 1] -= (-a[i] - 1) / 10 + 1;
+      a[i] += 10 * ((-a[i] - 1) / 10 + 1);
+    }
+  }
 }
 
-int count_digit(int8_t *a) {
-  for (int i = 0; i < 100; ++i) {
-    if (a[i] != 0) return 100 - i;
+void carry_up_down_fix384(int16_t *a) {
+  for (int i = 0; i < 384; ++i) {
+    if (a[i] >= 10) {
+      a[i + 1] += a[i] / 10;
+      a[i] -= 10 * (a[i] / 10);
+    }
   }
+  for (int i = 0; i < 384; ++i) {
+    if (a[i] < 0) {
+      a[i + 1] -= (-a[i] - 1) / 10 + 1;
+      a[i] += 10 * ((-a[i] - 1) / 10 + 1);
+    }
+  }
+}
+
+void carry_up_down_fix512(int16_t *a) {
+  for (int i = 0; i < 512; ++i) {
+    if (a[i] >= 10) {
+      a[i + 1] += a[i] / 10;
+      a[i] -= 10 * (a[i] / 10);
+    }
+  }
+  for (int i = 0; i < 512; ++i) {
+    if (a[i] < 0) {
+      a[i + 1] -= (-a[i] - 1) / 10 + 1;
+      a[i] += 10 * ((-a[i] - 1) / 10 + 1);
+    }
+  }
+}
+
+void div_by_10n(int16_t *a, int n, int16_t *ans) {
+  for (int i = n; i < 256; ++i) {
+    ans[i - n] = a[i];
+  }
+}
+
+void div_by_10n384(int16_t *a, int n, int16_t *ans) {
+  for (int i = n; i < 384; ++i) {
+    ans[i - n] = a[i];
+  }
+}
+
+void div_by_10n512(int16_t *a, int n, int16_t *ans) {
+  for (int i = n; i < 512; ++i) {
+    ans[i - n] = a[i];
+  }
+}
+
+void div_2(int16_t *a) {
+  int16_t tmp[256];
+  int16_t five[128];
+  five[0] = 5;
+  mul(a, five, tmp);
+  div_by_10n(tmp, 1, a);
+}
+
+void my_sqrt(int16_t *a, int16_t *ans) {
+  int16_t x[128] = {0};
+  x[127] = 5;
+  for (int i = 0; i < 30; ++i) {
+    int16_t one384[384] = {0};
+    one384[383] = 1;
+    int16_t tmp[256] = {0};
+    mul(a, x, tmp);
+    carry_up_down_fix(tmp);
+    int16_t tmp2[384] = {0};
+    mul384(tmp, x, tmp2);
+    carry_up_down_fix384(tmp2);
+    sub(one384, tmp2, tmp2);
+    carry_up_down_fix384(tmp2);
+    int16_t tmp3[512] = {0};
+    mul512(tmp2, x, tmp3);
+    carry_up_down_fix512(tmp3);
+    int16_t tmp4[128] = {0};
+    div_by_10n512(tmp3, 384, tmp4);
+    div_2(tmp4);
+    add(x, tmp4, x);
+    carry_up_down_fix128(x);
+  }
+  int16_t tmp[256] = {0};
+  mul(a, x, tmp);
+  carry_up_down_fix(tmp);
+  div_by_10n(tmp, 128, ans);
+}
+
+void divider(int16_t *k, int16_t *kinv) {
+  int16_t x[128] = {0};
+  x[127] = 5;
+  for (int i = 0; i < 20; ++i) {
+    int16_t bignum[256] = {0};
+    bignum[255] = 1;
+    int16_t tmp[256] = {0};
+    mul(k, x, tmp);
+    carry_up_down_fix(tmp);
+    sub(bignum, tmp, tmp);
+    carry_up_down_fix(tmp);
+    int16_t tmp2[384] = {0};
+    mul384(tmp, x, tmp2);
+    int16_t tmp3[128] = {0};
+    div_by_10n384(tmp2, 256, tmp3);
+    add(x, tmp3, x);
+    carry_up_down_fix128(x);
+  }
+  memcpy(kinv, x, sizeof(int16_t) * 128);
 }
 
 int main() {
   srand(time(NULL));
-  int8_t a[100];
-  for (int i = 0; i < 100; ++i) {
-    a[i] = get_random_int(0, 9);
+  int16_t a[128] = {0};
+  a[127] = 1;
+  int16_t b[128] = {0};
+  b[126] = 5;
+  int16_t c[128] = {0};
+  int16_t two_n[8][128] = {0};
+  for (int i = 0; i < 8; ++i) {
+    two_n[i][0] = pow(2, i);
+    carry_up_down_fix128(two_n[i]);
   }
-  int8_t b[100];
-  for (int i = 0; i < 100; ++i) {
-    b[i] = get_random_int(0, 9);
+  sub(a, b, c);
+  carry_up_down_fix(c);
+  int16_t clist[9][128] = {0};
+  for (int i = 0; i < 9; ++i) {
+    int16_t ab[256] = {0};
+    mul(a, b, ab);
+    carry_up_down_fix(ab);
+    int16_t sqrtab[128] = {0};
+    my_sqrt(ab, sqrtab);
+    int16_t aplusb[128] = {0};
+    add(a, b, aplusb);
+    carry_up_down_fix(aplusb);
+    div_2(aplusb);
+    int16_t an = {0};
+    add(aplusb, sqrtab, an);
+    int16_t an[128] = {0};
+    div_2(an);
+    int16_t bn[128] = {0};
+    memcpy(bn, sqrtab, sizeof(int16_t) * 128);
+    int16_t cn[128] = {0};
+    sub(an, bn, cn);
+    carry_up_down_fix(cn);
+    int16_t tmp2[256] = {0};
+    mul(cn, two_n[i], tmp2);
+    memcpy(a, an, sizeof(int16_t) * 128);
+    memcpy(b, bn, sizeof(int16_t) * 128);
+    memcpy(clist[i], tmp2, sizeof(int16_t) * 128);
   }
-  int16_t *ans = calloc(200, sizeof(int16_t));
-  mul(a, b, ans);
+  int16_t k[128] = {0};
+  for (int i = 0; i < 9; ++i) {
+    add(k, clist[i], k);
+  }
+  carry_up_down_fix(k);
+  int16_t onetwoeight[128] = {0};
+  onetwoeight[127] = 1;
+  sub(onetwoeight, k, k);
+  carry_up_down_fix(k);
+  int16_t kinv[256] = {0};
+  divider(k, kinv);
+  int16_t aplusb[128] = {0};
+  add(a, b, aplusb);
+  carry_up_down_fix128(aplusb);
+  int16_t ans[256] = {0};
+  mul(aplusb, kinv, ans);
   carry_up_down_fix(ans);
-  sub(ans, a, ans);
-  carry_up_down_fix(ans);
-  for (int i = 199; i >= 0; --i) {
-    printf("%d ", ans[i]);
-  }
-  printf("\n");
-  for (int i = 99; i >= 0; --i) {
-    printf("%d", a[i]);
-  }
-  printf("\n+\n");
-  for (int i = 99; i >= 0; --i) {
-    printf("%d", b[i]);
-  }
-  printf("\n=\n");
-  for (int i = 199; i >= 0; --i) {
+  for (int i = 255; i >= 0; --i) {
     printf("%d", ans[i]);
   }
-  printf("\n");
-  free(ans);
   return 0;
 }
