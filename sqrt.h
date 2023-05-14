@@ -6,11 +6,12 @@
 
 #pragma once
 
+//多分ok
 void my_sqrt(int16_t *in, int16_t *ans) {
   int16_t x[128] = {0};
   x[124] = 5;
   int16_t a[128] = {0};
-  div_by_10n(in, 126, a);
+  div_by_10n(in, 127, a);
   print_array(a, 128);
   for (int i = 0; i < 30; ++i) {
     int16_t one384[384] = {0};
@@ -23,7 +24,7 @@ void my_sqrt(int16_t *in, int16_t *ans) {
     int16_t tmp3[512] = {0};
     mul512(tmp2, x, tmp3);
     int16_t tmp4[128] = {0};
-    div_by_10n512(tmp3, 383, tmp4);
+    div_by_10n512(tmp3, 379, tmp4);
     div_2(tmp4);
     int16_t tmp5[128] = {0};
     add(x, tmp4, tmp5);
