@@ -1,15 +1,15 @@
 #include <stdint.h>
+// #include <string.h>
 
 #include "add_sub.h"
 #include "carry_up_down.h"
 #include "div_by.h"
+#include "memcpy.h"
 #include "mul.h"
-#include "print.h"
 
 #pragma once
 
-
-//test passed
+// test passed
 void divider(int16_t *k, int16_t *kinv) {
   int16_t x[128] = {0};
   x[126] = 5;
@@ -26,5 +26,5 @@ void divider(int16_t *k, int16_t *kinv) {
     add(x, tmp3, x);
     // print_array(x, 128);
   }
-  memcpy(kinv, x, sizeof(int16_t) * 128);
+  mymemcpy(kinv, x, sizeof(int16_t) * 128);
 }

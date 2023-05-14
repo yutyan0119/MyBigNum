@@ -6,7 +6,7 @@
 
 #pragma once
 
-//多分ok
+// 多分ok
 void my_sqrt(int16_t *in, int16_t *ans) {
   int16_t x[128] = {0};
   x[124] = 5;
@@ -27,7 +27,7 @@ void my_sqrt(int16_t *in, int16_t *ans) {
     div_2(tmp4);
     int16_t tmp5[128] = {0};
     add(x, tmp4, tmp5);
-    memcpy(x, tmp5, sizeof(int16_t) * 128);
+    mymemcpy(x, tmp5, sizeof(int16_t) * 128);
   }
   int16_t tmp[256] = {0};
   mul(a, x, tmp);

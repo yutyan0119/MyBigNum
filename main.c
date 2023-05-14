@@ -1,14 +1,13 @@
-#include <math.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <math.h>    //pow
+#include <stdint.h>  //int16_t
+#include <stdio.h>   //printf
+#include <stdlib.h>  //calloc and free
+// #include <string.h> //memcpy
 
 #include "add_sub.h"
 #include "carry_up_down.h"
 #include "divider.h"
+#include "memcpy.h"
 #include "mul.h"
 #include "print.h"
 #include "sqrt.h"
@@ -41,7 +40,7 @@ int main() {
   for (int i = 0; i < 10; ++i) {
     clist[i] = calloc(128, sizeof(int16_t));
   }
-  memcpy(clist[0], c, sizeof(int16_t) * 128);
+  mymemcpy(clist[0], c, sizeof(int16_t) * 128);
   for (int i = 0; i < 9; ++i) {
     int16_t ab[256] = {0};
     mul(a, b, ab);
@@ -54,17 +53,17 @@ int main() {
     add(aplusb, sqrtab, an);
     div_2(an);
     int16_t bn[128] = {0};
-    memcpy(bn, sqrtab, sizeof(int16_t) * 128);
+    mymemcpy(bn, sqrtab, sizeof(int16_t) * 128);
     int16_t cn[128] = {0};
     sub(an, bn, cn);
     int16_t tmp2[256] = {0};
     // print_array(cn, 128);
     // print_array(two_n[i], 128);
     mul(cn, two_n[i], tmp2);
-    memcpy(a, an, sizeof(int16_t) * 128);
-    memcpy(b, bn, sizeof(int16_t) * 128);
+    mymemcpy(a, an, sizeof(int16_t) * 128);
+    mymemcpy(b, bn, sizeof(int16_t) * 128);
     // print_array(tmp2, 128);
-    memcpy(clist[i+1], tmp2, sizeof(int16_t) * 128);
+    mymemcpy(clist[i + 1], tmp2, sizeof(int16_t) * 128);
   }
   int16_t k[128] = {0};
   for (int i = 0; i < 10; ++i) {
@@ -73,8 +72,8 @@ int main() {
   int16_t onetwoeight[128] = {0};
   onetwoeight[127] = 1;
   sub(onetwoeight, k, k);
-  for (int i = 126; i >= 0; --i){
-    k[i+1] = k[i];
+  for (int i = 126; i >= 0; --i) {
+    k[i + 1] = k[i];
   }
   int16_t kinv[128] = {0};
   divider(k, kinv);
