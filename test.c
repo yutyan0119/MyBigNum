@@ -19,19 +19,17 @@ int get_random_int(int min, int max) {
 
 
 int main (){
-    int16_t a[128] = {0};
-    // srand(time(NULL));
-    // for (int i = 0; i < 256; ++i) {
-    //     a[i] = get_random_int(0, 9);
-    // }
-    a[126] = 1;
-    int16_t b[128] = {0};
-    b[125] = 5;
-    int16_t c[256] = {0};
-    mul(a, b, c);
-    print_array(c, 256);
-    int16_t d[128] = {0};
-    my_sqrt(c, d);
-    print_array(d, 128);
+    const char* str = "45694658104446362537496662254768333661176773001483150839436224726748435807080538559873312100885656393157817473150963778124939960";
+    int16_t arr[strlen(str)];
+    arr[0] = 0;
+
+    for (size_t i = 0; i < strlen(str) - 1; i++) {
+        arr[127-i] = str[i] - '0';  // '0' is subtracted to convert char to int
+    }
+    print_array(arr, 128);
+    // Print to verify
+    int16_t k[128] = {0};
+    divider(arr, k);
+    print_array(k, 128);
     return 0;
 }

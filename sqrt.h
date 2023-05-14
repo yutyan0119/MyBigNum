@@ -12,7 +12,6 @@ void my_sqrt(int16_t *in, int16_t *ans) {
   x[124] = 5;
   int16_t a[128] = {0};
   div_by_10n(in, 127, a);
-  print_array(a, 128);
   for (int i = 0; i < 30; ++i) {
     int16_t one384[384] = {0};
     one384[379] = 1;
@@ -28,7 +27,6 @@ void my_sqrt(int16_t *in, int16_t *ans) {
     div_2(tmp4);
     int16_t tmp5[128] = {0};
     add(x, tmp4, tmp5);
-    print_array(tmp5, 128);
     memcpy(x, tmp5, sizeof(int16_t) * 128);
   }
   int16_t tmp[256] = {0};
