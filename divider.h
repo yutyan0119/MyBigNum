@@ -1,5 +1,4 @@
 #include <stdint.h>
-// #include <string.h>
 
 #include "add_sub.h"
 #include "carry_up_down.h"

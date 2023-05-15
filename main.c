@@ -2,7 +2,6 @@
 #include <stdint.h>  //int16_t
 #include <stdio.h>   //printf
 #include <stdlib.h>  //calloc and free
-// #include <string.h> //memcpy
 
 #include "add_sub.h"
 #include "carry_up_down.h"
