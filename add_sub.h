@@ -2,7 +2,7 @@
 #pragma once
 
 // test passed
-void add(int16_t *a, int16_t *b, int16_t *ans) {
+void add(short *a, short *b, short *ans) {
   for (int i = 0; i < 128; ++i) {
     ans[i] = a[i] + b[i];
   }
@@ -10,7 +10,7 @@ void add(int16_t *a, int16_t *b, int16_t *ans) {
 }
 
 // test passed
-void add256(int16_t *a, int16_t *b, int16_t *ans) {
+void add256(short *a, short *b, short *ans) {
   for (int i = 0; i < 256; ++i) {
     ans[i] = a[i] + b[i];
   }
@@ -18,21 +18,21 @@ void add256(int16_t *a, int16_t *b, int16_t *ans) {
 }
 
 // test passed
-void sub(int16_t *a, int16_t *b, int16_t *ans) {
+void sub(short *a, short *b, short *ans) {
   for (int i = 0; i < 128; ++i) {
     ans[i] = a[i] - b[i];
   }
   carry_up_down_fix128(ans);
 }
 
-void sub256(int16_t *a, int16_t *b, int16_t *ans) {
+void sub256(short *a, short *b, short *ans) {
   for (int i = 0; i < 256; ++i) {
     ans[i] = a[i] - b[i];
   }
   carry_up_down_fix(ans);
 }
 
-void sub384(int16_t *a, int16_t *b, int16_t *ans) {
+void sub384(short *a, short *b, short *ans) {
   for (int i = 0; i < 384; ++i) {
     ans[i] = a[i] - b[i];
   }

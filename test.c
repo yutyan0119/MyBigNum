@@ -20,7 +20,7 @@ int get_random_int(int min, int max) {
 
 int main (){
     const char* str = "45694658104446362537496662254768333661176773001483150839436224726748435807080538559873312100885656393157817473150963778124939960";
-    int16_t arr[strlen(str)];
+    short arr[strlen(str)];
     arr[0] = 0;
 
     for (size_t i = 0; i < strlen(str) - 1; i++) {
@@ -28,7 +28,7 @@ int main (){
     }
     print_array(arr, 128);
     // Print to verify
-    int16_t k[128] = {0};
+    short k[128] = {0};
     divider(arr, k);
     print_array(k, 128);
     return 0;
