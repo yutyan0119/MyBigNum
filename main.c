@@ -1,4 +1,3 @@
-#include <math.h>    //pow
 #include <stdint.h>  //int16_t
 #include <stdio.h>   //printf
 #include <stdlib.h>  //calloc and free
@@ -8,33 +7,25 @@
 #include "divider.h"
 #include "memcpy.h"
 #include "mul.h"
+#include "mypow.h"
 #include "print.h"
 #include "sqrt.h"
 
-int get_random_int(int min, int max) {
-  return min + (int)(rand() / (1.0 + RAND_MAX) * (max - min + 1.0));
-}
-
 int main() {
-  // int16_t a[128] = {0};
   int16_t* a = calloc(128, sizeof(int16_t));
   a[127] = 1;
-  // int16_t b[128] = {0};
   int16_t* b = calloc(128, sizeof(int16_t));
   b[126] = 5;
-  // int16_t c[128] = {0};
   int16_t* c = calloc(128, sizeof(int16_t));
-  // int16_t two_n[9][128] = {0};
   int16_t** two_n = calloc(9, sizeof(int16_t*));
   for (int i = 0; i < 9; ++i) {
     two_n[i] = calloc(128, sizeof(int16_t));
   }
   for (int i = 0; i < 9; ++i) {
-    two_n[i][0] = pow(2, i + 1);
+    two_n[i][0] = mypow(2, i + 1);
     carry_up_down_fix128(two_n[i]);
   }
   sub(a, b, c);
-  // int16_t clist[9][128] = {0};
   int16_t** clist = calloc(10, sizeof(int16_t*));
   for (int i = 0; i < 10; ++i) {
     clist[i] = calloc(128, sizeof(int16_t));
@@ -56,12 +47,9 @@ int main() {
     int16_t cn[128] = {0};
     sub(an, bn, cn);
     int16_t tmp2[256] = {0};
-    // print_array(cn, 128);
-    // print_array(two_n[i], 128);
     mul(cn, two_n[i], tmp2);
     mymemcpy(a, an, sizeof(int16_t) * 128);
     mymemcpy(b, bn, sizeof(int16_t) * 128);
-    // print_array(tmp2, 128);
     mymemcpy(clist[i + 1], tmp2, sizeof(int16_t) * 128);
   }
   int16_t k[128] = {0};
@@ -76,7 +64,6 @@ int main() {
   }
   int16_t kinv[128] = {0};
   divider(k, kinv);
-  // print_array(kinv, 128);
   int16_t aplusb[128] = {0};
   add(a, b, aplusb);
   int16_t ans[256] = {0};
