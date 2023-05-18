@@ -1,35 +1,36 @@
-// #include <stdint.h>  //short
-#include <stdio.h>   //printf
-#include <stdlib.h>  //calloc and free
-
 #include "add_sub.h"
 #include "carry_up_down.h"
 #include "divider.h"
 #include "memcpy.h"
 #include "mul.h"
 #include "mypow.h"
-#include "print.h"
+// #include "print.h"
 #include "sqrt.h"
 
 int main() {
-  short* a = calloc(128, sizeof(short));
+  // short* a = calloc(128, sizeof(short));
+  short a[128] = {0};
   a[127] = 1;
-  short* b = calloc(128, sizeof(short));
+  // short* b = calloc(128, sizeof(short));
+  short b[128] = {0};
   b[126] = 5;
-  short* c = calloc(128, sizeof(short));
-  short** two_n = calloc(9, sizeof(short*));
-  for (int i = 0; i < 9; ++i) {
-    two_n[i] = calloc(128, sizeof(short));
-  }
+  // short* c = calloc(128, sizeof(short));
+  short c[128] = {0};
+  // short** two_n = calloc(9, sizeof(short*));
+  // for (int i = 0; i < 9; ++i) {
+  //   two_n[i] = calloc(128, sizeof(short));
+  // }
+  short two_n[9][128] = {0};
   for (int i = 0; i < 9; ++i) {
     two_n[i][0] = mypow(2, i + 1);
     carry_up_down_fix128(two_n[i]);
   }
   sub(a, b, c);
-  short** clist = calloc(10, sizeof(short*));
-  for (int i = 0; i < 10; ++i) {
-    clist[i] = calloc(128, sizeof(short));
-  }
+  // short** clist = calloc(10, sizeof(short*));
+  // for (int i = 0; i < 10; ++i) {
+  //   clist[i] = calloc(128, sizeof(short));
+  // }
+  short clist[10][128] = {0};
   mymemcpy(clist[0], c, sizeof(short) * 128);
   for (int i = 0; i < 9; ++i) {
     short ab[256] = {0};
@@ -68,17 +69,17 @@ int main() {
   add(a, b, aplusb);
   short ans[256] = {0};
   mul(aplusb, kinv, ans);
-  print_array(ans, 256);
-  free(a);
-  free(b);
-  free(c);
-  for (int i = 0; i < 9; ++i) {
-    free(two_n[i]);
-  }
-  free(two_n);
-  for (int i = 0; i < 10; ++i) {
-    free(clist[i]);
-  }
-  free(clist);
+  // print_array(ans, 256);
+  // free(a);
+  // free(b);
+  // free(c);
+  // for (int i = 0; i < 9; ++i) {
+  //   free(two_n[i]);
+  // }
+  // free(two_n);
+  // for (int i = 0; i < 10; ++i) {
+  //   free(clist[i]);
+  // }
+  // free(clist);
   return 0;
 }
